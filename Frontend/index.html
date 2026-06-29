@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Habit Tracker App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+    <h1>Habit Tracker</h1>
+
+    <p>Build Better Habits Every Day</p>
+
+    <button id="darkBtn">Dark Mode</button>
+
+</header>
+
+<!-- Dashboard -->
+
+<section class="dashboard">
+
+    <h2>My Dashboard</h2>
+    <div class="stats">
+
+        <div class="card">
+            <h3>Total Habits</h3>
+            <p id="totalHabits">5</p>
+        </div>
+
+
+        <div class="card">
+            <h3>Current Streak</h3>
+            <p id="streak">12 Days 🔥</p>
+        </div>
+
+
+        <div class="card">
+            <h3>Completed Today</h3>
+            <p id="completed">3</p>
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- Create Habit -->
+
+
+<section class="create">
+<h2>Create New Habit</h2>
+
+<form>
+    
+<input type="text" id="habitName" placeholder="Habit Name">
+<select id="category" >
+
+  <option>Category</option>
+
+  <option>Health</option>
+
+  <option>Study</option>
+
+  <option>Fitness</option>
+
+  <option>Personal</option>
+</select>
+
+<select id="frequency">
+
+   <option>Frequency</option>
+
+   <option>Daily</option>
+
+   <option>Weekly</option>
+
+   <option>Monthly</option>
+</select>
+
+<input type="number" id="target" placeholder="Target Days"><br>
+<div>
+    <button type="button" id="addHabit">Add Habit</button>
+</div>
+
+</form>
+</section>
+
+<!-- Habit Cards -->
+
+<section class="habits">
+
+  <h2>Today's Habits</h2>
+  <div class="habit-container" id="habitContainer">
+
+   <div class="habit-card">
+       <h3>Exercise</h3>
+       <p>Category: Fitness</p>
+       <p>Target: 30 Days</p>
+       <button class="complete">Complete</button>
+   </div>
+
+   <div class="habit-card">
+       <h3>Read Book</h3>
+       <p>Category: Study</p>
+       <p>Target: Daily</p>
+       <button class="complete">Complete</button>
+   </div>
+
+   <div class="habit-card">
+       <h3>Drink Water</h3>
+       <p>Category: Health</p>
+       <p>Target: 8 Glasses</p>
+       <button class="complete">Complete</button>
+   </div>
+</div>
+</section>
+
+<div class="chart-box">
+    <h2>Progress Chart</h2>
+    <div class="progress-item">
+
+        <div class="progress-header">
+            <span>💪 Exercise</span>
+            <span>80%</span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill fill1"></div>
+        </div>   
+    </div>
+
+    <div class="progress-item">
+
+        <div class="progress-header">
+            <span>📖 Reading</span>
+            <span>60%</span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill fill2"></div>
+        </div>   
+    </div>
+
+    <div class="progress-item">
+
+        <div class="progress-header">
+           <span>💧 Water Intake</span>
+            <span>90%</span>
+
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill fill3"></div>
+        </div>   
+    </div>
+
+</div>
+
+<!-- Reminder -->
+<section class="reminder">
+
+   <h2>Custom Reminder</h2>
+   <input type="time">
+   <button>Set Reminder</button>
+</section>
+
+<!-- Rewards -->
+<section class="rewards">    
+   <h2>Rewards</h2>
+   <div class="badge">🏆 First Week Completed</div>
+   <div class="badge">🔥 30 Days Streak</div>
+</section>
+
+<!-- Calendar -->
+
+<section class="calendar">
+    <h2>Calendar</h2><br>
+    <h3 id="mon">JULY 2026</h3><br>
+   <div class="calendar-box">
+
+  
+
+    <div class="day">Sun</div>
+    <div class="day">Mon</div>
+    <div class="day">Tue</div>
+    <div class="day">Wed</div>
+    <div class="day">Thu</div>
+    <div class="day">Fri</div>
+    <div class="day">Sat</div>
+
+    <div>1</div>
+    <div>2</div>
+    <div>3 ✅</div>
+    <div>4</div>
+    <div>5 ✅</div>
+    <div>6</div>
+    <div>7</div>
+
+    <div>8</div>
+    <div>9 ✅</div>
+    <div>10</div>
+    <div>11</div>
+    <div>12 ✅</div>
+    <div>13</div>
+    <div>14</div>
+
+    <div>15</div>
+    <div>16✅</div>
+    <div>17</div>
+    <div>18</div>
+    <div>19 ✅</div>
+    <div>20</div>
+    <div>21</div>
+    
+    <div>22</div>
+    <div>23✅</div>
+    <div>24</div>
+    <div>25</div>
+    <div>26 ✅</div>
+    <div>27</div>
+    <div>28</div>
+
+    <div>29</div>
+    <div>30✅</div>
+    <div>31</div>
+   
+
+</div>
+</section>
+
+<footer>
+   <p>Habit Tracker App © 2026</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

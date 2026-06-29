@@ -1,11 +1,358 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
 }
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9fbfd;
-    color: #333;
-    line-height: 1.6;
+
+
+
+body{
+
+    background:#f4f7fb;
+    color:#333;
+
+}
+/* Header */
+header{
+
+    background:#4CAF50;
+    color:white;
+    padding:25px;
+    text-align:center;
+
+}
+
+header h1{
+
+    font-size:35px;
+    margin-bottom:10px;
+
+}
+header button{
+
+    margin-top:15px;
+    padding:10px 20px;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+    background:white;
+    color:#4CAF50;
+    font-weight:bold;
+
+}
+
+/* Dashboard */
+
+.dashboard,
+.create,
+.habits,
+.progress,
+.reminder,
+.rewards,
+.calendar{
+
+    padding:30px;
+
+}
+
+h2{
+
+    margin-bottom:20px;
+    text-align:center;
+
+}
+
+.stats{
+
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+
+}
+
+.card{
+
+    background:white;
+    width:220px;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+}
+
+.card p{
+
+    font-size:25px;
+    margin-top:10px;
+    color:#4CAF50;
+
+}
+
+/* Create Habit */
+
+form{
+
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    display:flex;
+    flex-direction: column;
+    
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+}
+
+
+
+input,option,
+select{
+    font-family:'Times New Roman', Times, serif;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    color:  gray;
+    justify-content: center;
+
+}
+
+
+
+form button{
+
+    background:#4CAF50;
+    color:white;
+    border:none;
+    padding:12px 25px;
+    border-radius:8px;
+    cursor:pointer;
+    align-items: center;
+    text-align: center;
+    font-size: 15px;
+
+}
+/* Habit Cards */
+
+.habit-container{
+
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+
+}
+.habit-card{
+
+    background:white;
+    width:250px;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+}
+
+.habit-card h3{
+
+    margin-bottom:15px;
+
+}
+.habit-card p{
+
+    margin:10px 0;
+
+}
+.complete{
+
+    width:100%;
+    margin-top:15px;
+    padding:12px;
+    background:#2196F3;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+
+}
+
+.complete:hover{
+
+    background:#1976D2;
+
+}
+
+/* Progress Chart */
+.chart-box{
+
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+}
+
+.progress-item{
+
+    margin:20px 0;
+
+}
+
+.progress-header{
+    font-size: 20px;
+    color: solid black;
+}
+
+.progress-bar{
+
+    width:100%;
+    height:18px;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+
+}
+
+.progress-fill{
+
+    height:100%;
+    border-radius:20px;
+
+}
+
+.fill1{
+
+    width:80%;
+    background:#4CAF50;
+
+}
+
+.fill2{
+
+    width:60%;
+    background:#2196F3;
+
+}
+
+.fill3{
+
+    width:90%;
+    background:#FF9800;
+
+}
+/* Reminder */
+.reminder{
+
+    text-align:center;
+
+}
+.reminder button{
+
+    padding:12px 25px;
+    background:#ff9800;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+
+}
+
+/* Rewards */
+.rewards{
+    text-align: center;
+}
+.badge{
+
+    display:inline-block;
+    background:white;
+    padding:20px;
+    margin:10px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+
+}
+
+/* Calendar */
+
+#mon{
+    font-size: 25px;
+}
+.calendar-box{
+
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+}
+
+.calendar-box div{
+
+    background:#f3f3f3;
+    padding:18px;
+    text-align:center;
+    border-radius:8px;
+    font-weight:bold;
+
+}
+
+.day{
+
+    background:#4CAF50 !important;
+    color:white;
+
+}
+footer{
+
+    text-align:center;
+    padding:20px;
+    background:#333;
+    color:white;
+
+}
+/* Dark Mode */
+.dark{
+
+    background:#121212;
+    color:white;
+
+}
+.dark .card,
+.dark .habit-card,
+.dark form,
+.dark .chart-box,
+.dark .badge,
+.dark .calendar-box{
+
+    background:#1e1e1e;
+    color:white;
+
+}
+
+/* Mobile Responsive */
+@media(max-width:700px){
+
+
+    .card,
+    .habit-card{
+
+        width:90%;
+
+    }
+
+
+    form{
+
+        flex-direction:column;
+
+    }
+
+
 }

@@ -482,8 +482,8 @@ function renderSidebar() {
 
   host.innerHTML = `
     <a class="sidebar-brand" href="dashboard.html">
-      <img src="images/logo.png" alt="HabitForge Logo" class="sidebar-logo-img" style="width: 40px; height: 40px; object-fit: contain;" />
-      <span class="brand-text">HabitForge<span>Study &amp; Habit OS</span></span>
+      <img src="images/logo.png" alt="Habit Logo" class="sidebar-logo-img" style="width: 40px; height: 40px; object-fit: contain;" />
+      <span class="brand-text">Habit<span>Study &amp; Habit OS</span></span>
     </a>
     <p class="sidebar-label">Menu</p>
     <ul class="sidebar-nav">

@@ -11,13 +11,31 @@ connectDB();
 
 const app = express();
 
-// ---------- Core Middlewares ----------
+console.log("🔥 THIS IS MY SERVER");
+
+
 app.use(
   cors({
-    origin: config.clientUrl,
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        config.clientUrl,
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:5000",
+        "http://127.0.0.1:5000",
+      ].filter(Boolean);
+      if (!origin || allowedOrigins.includes(origin) || config.env === "development") {
+        callback(null, true);
+      } else {
+        callback(null, true);
+      }
+    },
     credentials: true,
   })
 );
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
@@ -26,26 +44,21 @@ if (config.env === "development") {
   app.use(morgan("dev"));
 }
 
-// ---------- Health Check ----------
-app.get("/api/health", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Habit Tracker API is running",
-    environment: config.env,
-    timestamp: new Date().toISOString(),
-  });
+app.use((req, res, next) => {
+  console.log("➡️", req.method, req.originalUrl);
+  next();
 });
 
 // ---------- API Routes ----------
-// Route modules will be mounted here as they are generated:
-// app.use("/api/auth", require("./routes/authRoutes"));
-// app.use("/api/habits", require("./routes/habitRoutes"));
-// app.use("/api/journal", require("./routes/journalRoutes"));
-// app.use("/api/rewards", require("./routes/rewardRoutes"));
-// app.use("/api/analytics", require("./routes/analyticsRoutes"));
-// app.use("/api/reminders", require("./routes/reminderRoutes"));
-// app.use("/api/dashboard", require("./routes/dashboardRoutes"));
-// app.use("/api/profile", require("./routes/profileRoutes"));
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/habits", require("./routes/habitRoutes"));
+app.use("/api/journal", require("./routes/journalRoutes"));
+app.use("/api/study", require("./routes/studyRoutes"));
+app.use("/api/rewards", require("./routes/rewardRoutes"));
+app.use("/api/analytics", require("./routes/analyticsRoutes"));
+app.use("/api/profile", require("./routes/profileRoutes"));
+app.use("/api/dashboard", require("./routes/dashboardRoutes"));
+app.use("/api/reminders", require("./routes/reminderRoutes"));
 
 // ---------- 404 Handler ----------
 app.use((req, res) => {
@@ -56,15 +69,7 @@ app.use((req, res) => {
 });
 
 // ---------- Global Error Handler ----------
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  const statusCode = err.statusCode || 500;
-  res.status(statusCode).json({
-    success: false,
-    message: err.message || "Internal Server Error",
-    ...(config.env === "development" && { stack: err.stack }),
-  });
-});
+app.use(require("./middlewares/errorMiddleware"));
 
 const PORT = config.port;
 

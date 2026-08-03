@@ -1,0 +1,364 @@
+/* ==========================================================
+   study.css — Premium Manual Study Planner Styles
+   ========================================================== */
+
+/* --- Custom Scrollbar for Planner --- */
+.page-wrap ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.page-wrap ::-webkit-scrollbar-track {
+  background: #0F1115;
+  border-radius: 4px;
+}
+.page-wrap ::-webkit-scrollbar-thumb {
+  background: rgba(255, 215, 0, 0.3);
+  border-radius: 4px;
+  transition: background 0.25s ease;
+}
+.page-wrap ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.6);
+}
+
+/* --- Page Spacing & Header --- */
+.welcome-panel {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+}
+
+.welcome-panel h1 {
+  font-weight: 700;
+  font-size: 2.25rem;
+  color: #FFFFFF;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+}
+
+.welcome-panel p {
+  color: #9CA3AF;
+  font-size: 0.95rem;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
+.btn-outline-gold {
+  color: #FFC107;
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  border-radius: 8px;
+  background: transparent;
+  font-weight: 600;
+  padding: 8px 16px;
+  transition: all 0.25s ease;
+}
+
+.btn-outline-gold:hover {
+  background: rgba(255, 193, 7, 0.1);
+  color: #FFC107;
+  border-color: #FFC107;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+}
+
+/* --- Premium Cards (.card-panel) --- */
+.card-panel {
+  background-color: #171A21 !important;
+  border: 1px solid rgba(255, 215, 0, 0.15) !important;
+  border-radius: 18px !important;
+  padding: 30px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  height: 100%;
+}
+
+.card-panel:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 215, 0, 0.25) !important;
+}
+
+.card-head .section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.01em;
+}
+
+.card-head .section-subtitle {
+  font-size: 0.85rem;
+  color: #9CA3AF;
+}
+
+/* --- Form Typography & Labels --- */
+.form-label {
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: #9CA3AF !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px !important;
+}
+
+/* --- Premium Form Inputs & Selects --- */
+.form-control, 
+.form-select {
+  background-color: #0F1115 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+  height: 52px !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font-size: 0.95rem !important;
+  font-weight: 500;
+  box-shadow: none !important;
+  transition: all 0.25s ease !important;
+  appearance: none;
+}
+
+.form-control:focus, 
+.form-select:focus {
+  border-color: #FFC107 !important;
+  background-color: #0F1115 !important;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.15) !important;
+}
+
+/* Custom Select Arrow */
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: 16px 12px !important;
+}
+.form-select:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23FFC107' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+}
+
+/* Custom Time Input Indicator */
+.form-control::-webkit-calendar-picker-indicator {
+  filter: invert(1) opacity(0.5);
+  cursor: pointer;
+  transition: filter 0.25s ease;
+}
+.form-control:focus::-webkit-calendar-picker-indicator,
+.form-control:hover::-webkit-calendar-picker-indicator {
+  filter: invert(75%) sepia(80%) saturate(300%) hue-rotate(5deg) brightness(105%);
+}
+
+/* --- Primary Add Button --- */
+#addTimeSlotBtn {
+  background: linear-gradient(135deg, #FFC107, #FFB300) !important;
+  color: #0F1115 !important;
+  height: 50px !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  border: none !important;
+  border-radius: 12px !important;
+  transition: all 0.25s ease !important;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#addTimeSlotBtn:hover {
+  transform: scale(1.02) !important;
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4) !important;
+}
+
+#addTimeSlotBtn:active {
+  transform: scale(0.98) !important;
+}
+
+/* --- Compact Session Cards --- */
+.card-panel .card {
+  background-color: #0F1115 !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  border-left: 4px solid #FFC107 !important;
+  border-radius: 12px !important;
+  padding: 14px 18px !important;
+  margin-bottom: 12px !important;
+  transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease !important;
+}
+
+.card-panel .card:hover {
+  transform: translateX(4px) !important;
+  border-left-color: #FFB300 !important;
+  border-color: rgba(255, 215, 0, 0.15) !important;
+  background-color: #121419 !important;
+}
+
+.card-panel .card .card-body {
+  padding: 0 !important;
+}
+
+/* Session Text Alignment */
+.card-panel .card h6 {
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em;
+  color: #FFC107 !important;
+}
+
+.card-panel .card h5 {
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
+  margin-bottom: 0 !important;
+}
+
+/* --- Priority Badges --- */
+.card-panel .badge {
+  font-weight: 600 !important;
+  padding: 5px 12px !important;
+  border-radius: 6px !important;
+  letter-spacing: 0.04em !important;
+  font-size: 0.65rem !important;
+  text-transform: uppercase;
+}
+
+.bg-danger {
+  background-color: rgba(239, 68, 68, 0.12) !important;
+  color: #EF4444 !important;
+  border: 1px solid rgba(239, 68, 68, 0.25) !important;
+}
+
+.bg-warning {
+  background-color: rgba(249, 115, 22, 0.12) !important;
+  color: #F97316 !important;
+  border: 1px solid rgba(249, 115, 22, 0.25) !important;
+}
+
+.bg-success {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+  color: #10B981 !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+}
+
+/* --- Circular Action Buttons --- */
+.card-panel .card .btn {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  transition: all 0.25s ease !important;
+  background: transparent !important;
+}
+
+.btn-outline-success {
+  color: #10B981 !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+.btn-outline-success:hover {
+  background-color: #10B981 !important;
+  color: #FFFFFF !important;
+  border-color: #10B981 !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+.btn-outline-info {
+  color: #3B82F6 !important;
+  border: 1px solid rgba(59, 130, 246, 0.4) !important;
+}
+.btn-outline-info:hover {
+  background-color: #3B82F6 !important;
+  color: #FFFFFF !important;
+  border-color: #3B82F6 !important;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+.btn-outline-danger {
+  color: #EF4444 !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+}
+.btn-outline-danger:hover {
+  background-color: #EF4444 !important;
+  color: #FFFFFF !important;
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.3) !important;
+}
+
+/* --- Accordion (Weekly Timetable) --- */
+.accordion-item {
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.accordion-item:last-child {
+  border-bottom: none !important;
+}
+
+.accordion-button {
+  background-color: transparent !important;
+  color: #9CA3AF !important;
+  box-shadow: none !important;
+  padding: 1.25rem 0 !important;
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  transition: color 0.25s ease !important;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #FFC107 !important;
+  background-color: transparent !important;
+}
+
+.accordion-button:hover {
+  color: #FFFFFF !important;
+}
+
+.accordion-button::after {
+  filter: invert(0.6);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.accordion-button:not(.collapsed)::after {
+  filter: invert(75%) sepia(80%) saturate(300%) hue-rotate(5deg) brightness(105%);
+}
+
+.accordion-body {
+  padding: 0 0 1.5rem 0 !important;
+}
+
+/* --- Utilities & Typography Overrides --- */
+hr.divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  opacity: 1 !important;
+  margin: 2rem 0 !important;
+}
+
+.text-muted {
+  color: #9CA3AF !important;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 991.98px) {
+  .card-panel {
+    padding: 20px !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .card-panel .card .card-body {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  
+  .card-panel .card .d-flex.gap-2 {
+    width: 100% !important;
+    justify-content: flex-end !important;
+    margin-top: 6px !important;
+  }
+  
+  .form-control, .form-select {
+    height: 48px !important;
+  }
+  
+  #addTimeSlotBtn {
+    height: 48px !important;
+  }
+}

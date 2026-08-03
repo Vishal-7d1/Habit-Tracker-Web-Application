@@ -33,33 +33,23 @@
 .sidebar-brand {
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 4px 8px 20px;
+  gap: 12px;
+  padding: 6px 8px 22px;
   color: var(--text-primary);
+  text-decoration: none;
 }
 
 .sidebar-brand:hover {
   color: var(--text-primary);
 }
 
-.brand-mark {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
-  border-radius: 10px;
-  background: transparent;
-  display: grid;
-  place-items: center;
-  font-size: 1rem;
-  overflow: hidden;
-}
-
-.brand-mark img,
+.sidebar-logo-img,
 .brand-logo-img {
-  width: 100%;
-  height: 100%;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .brand-text {

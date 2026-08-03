@@ -24,6 +24,17 @@ function applyTheme(theme) {
   document.querySelectorAll("[data-theme-switch]").forEach((input) => {
     input.checked = theme === "dark";
   });
+
+  // Sync Visual Theme Cards in Settings
+  document.querySelectorAll("[data-theme-option]").forEach((card) => {
+    const option = card.getAttribute("data-theme-option");
+    if (option === theme) {
+      card.classList.add("active");
+    } else {
+      card.classList.remove("active");
+    }
+  });
+
   document.dispatchEvent(new CustomEvent("theme:changed", { detail: { theme } }));
 }
 
@@ -38,12 +49,21 @@ function initThemeToggle() {
   });
 }
 
-// Global click event delegation for theme toggle buttons
+// Global click event delegation for theme toggle buttons & theme option cards
 document.addEventListener("click", (event) => {
   const toggleBtn = event.target.closest("#themeToggle");
   if (toggleBtn) {
     event.preventDefault();
     toggleTheme();
+    return;
+  }
+
+  const themeOptionCard = event.target.closest("[data-theme-option]");
+  if (themeOptionCard) {
+    const selectedTheme = themeOptionCard.getAttribute("data-theme-option");
+    if (selectedTheme) {
+      applyTheme(selectedTheme);
+    }
   }
 });
 

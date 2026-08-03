@@ -22,11 +22,28 @@ const userSchema = new mongoose.Schema(
         "Please provide a valid email address",
       ],
     },
+    phone: {
+      type: String,
+      required: [true, "Phone number is required"],
+      unique: true,
+      trim: true,
+      match: [/^[0-9]{10}$/, "Please provide a valid 10-digit phone number"],
+    },
     password: {
       type: String,
       required: [true, "Password is required"],
-      minlength: [8, "Password must be at least 8 characters"],
+      minlength: [6, "Password must be at least 6 characters"],
       select: false,
+    },
+    otp: {
+      code: {
+        type: String,
+        select: false,
+      },
+      expiresAt: {
+        type: Date,
+        select: false,
+      },
     },
     avatar: {
       url: {
@@ -150,6 +167,7 @@ userSchema.methods.toSafeObject = function toSafeObject() {
     id: this._id,
     name: this.name,
     email: this.email,
+    phone: this.phone,
     avatar: this.avatar,
     bio: this.bio,
     timezone: this.timezone,

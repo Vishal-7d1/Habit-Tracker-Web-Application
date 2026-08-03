@@ -103,3 +103,54 @@
 .auth-back:hover {
   color: var(--gold);
 }
+
+/* --- Login Tabs & OTP Controls --- */
+.login-tabs {
+  display: flex;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 22px;
+  gap: 4px;
+}
+
+.login-tab-btn {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 6px;
+  border-radius: 8px;
+  transition: all 0.22s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.login-tab-btn.active {
+  background: var(--gold);
+  color: #0F1115;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+.input-with-btn {
+  display: flex;
+  gap: 8px;
+}
+
+.input-with-btn .form-control {
+  flex: 1;
+}
+
+.btn-send-otp {
+  white-space: nowrap;
+  font-size: 0.8rem;
+  padding: 0 14px;
+  border-radius: var(--radius-field);
+}
+

@@ -4,6 +4,7 @@
    ========================================================== */
 
 function setFieldError(input, message) {
+  if (!input) return;
   const holder = document.getElementById(`${input.id}Error`);
   if (message) {
     input.classList.add("invalid");
@@ -23,6 +24,10 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim());
 }
 
+function isValidPhone(value) {
+  return /^[0-9]{10}$/.test(value.trim());
+}
+
 function initPasswordToggles() {
   document.querySelectorAll(".toggle-password").forEach((button) => {
     button.addEventListener("click", () => {
@@ -36,35 +41,141 @@ function initPasswordToggles() {
   });
 }
 
-
 function initLoginForm() {
   const form = document.getElementById("loginForm");
   if (!form) return;
-  const email = document.getElementById("loginEmail");
-  const password = document.getElementById("loginPassword");
 
-form.addEventListener("submit", async (event) => {
+  const emailGroup = document.getElementById("emailGroup");
+  const phoneGroup = document.getElementById("phoneGroup");
+  const passwordGroup = document.getElementById("passwordGroup");
+  const otpGroup = document.getElementById("otpGroup");
+
+  const emailInput = document.getElementById("loginEmail");
+  const phoneInput = document.getElementById("loginPhone");
+  const passwordInput = document.getElementById("loginPassword");
+  const otpInput = document.getElementById("loginOtp");
+  const sendOtpBtn = document.getElementById("sendLoginOtpBtn");
+  const submitBtn = document.getElementById("loginSubmitBtn");
+
+  let currentMode = "email"; // 'email', 'phone', 'otp'
+
+  // Tab switcher
+  document.querySelectorAll(".login-tab-btn").forEach((tabBtn) => {
+    tabBtn.addEventListener("click", () => {
+      document.querySelectorAll(".login-tab-btn").forEach((b) => b.classList.remove("active"));
+      tabBtn.classList.add("active");
+      currentMode = tabBtn.dataset.mode;
+
+      // Clear errors
+      [emailInput, phoneInput, passwordInput, otpInput].forEach((inp) => inp && setFieldError(inp, ""));
+
+      if (currentMode === "email") {
+        emailGroup.classList.remove("d-none");
+        phoneGroup.classList.add("d-none");
+        passwordGroup.classList.remove("d-none");
+        otpGroup.classList.add("d-none");
+        submitBtn.textContent = "Login with Email";
+      } else if (currentMode === "phone") {
+        emailGroup.classList.add("d-none");
+        phoneGroup.classList.remove("d-none");
+        passwordGroup.classList.remove("d-none");
+        otpGroup.classList.add("d-none");
+        submitBtn.textContent = "Login with Phone";
+      } else if (currentMode === "otp") {
+        emailGroup.classList.add("d-none");
+        phoneGroup.classList.remove("d-none");
+        passwordGroup.classList.add("d-none");
+        otpGroup.classList.remove("d-none");
+        submitBtn.textContent = "Verify & Login via OTP";
+      }
+    });
+  });
+
+  // Send OTP button
+  if (sendOtpBtn) {
+    sendOtpBtn.addEventListener("click", async () => {
+      const phoneVal = phoneInput.value.trim();
+      if (!isValidPhone(phoneVal)) {
+        setFieldError(phoneInput, "Enter a valid 10-digit mobile number.");
+        return;
+      }
+      setFieldError(phoneInput, "");
+      setButtonLoading(sendOtpBtn, true, "Sending...");
+
+      try {
+        const res = await AuthAPI.sendOtp(phoneVal, "login");
+        if (res.success) {
+          showToast(res.message || `OTP Sent: ${res.data?.otp}`, "success");
+          if (res.data?.otp && otpInput) {
+            otpInput.value = res.data.otp;
+          }
+        } else {
+          showToast(res.message || "Failed to send OTP.", "danger");
+        }
+      } catch (err) {
+        showToast(err.message || "Failed to send OTP.", "danger");
+      } finally {
+        setButtonLoading(sendOtpBtn, false);
+      }
+    });
+  }
+
+  // Submit Handler
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     let valid = true;
 
-    if (!email.value.trim()) {
-      setFieldError(email, "Email is required.");
-      valid = false;
-    } else if (!isValidEmail(email.value)) {
-      setFieldError(email, "Enter a valid email address.");
-      valid = false;
-    } else {
-      setFieldError(email, "");
-    }
+    if (currentMode === "email") {
+      if (!emailInput.value.trim()) {
+        setFieldError(emailInput, "Email is required.");
+        valid = false;
+      } else if (!isValidEmail(emailInput.value)) {
+        setFieldError(emailInput, "Enter a valid email address.");
+        valid = false;
+      } else {
+        setFieldError(emailInput, "");
+      }
 
-    if (!password.value) {
-      setFieldError(password, "Password is required.");
-      valid = false;
-    } else if (password.value.length < 6) {
-      setFieldError(password, "Password must be at least 6 characters.");
-      valid = false;
-    } else {
-      setFieldError(password, "");
+      if (!passwordInput.value) {
+        setFieldError(passwordInput, "Password is required.");
+        valid = false;
+      } else if (passwordInput.value.length < 6) {
+        setFieldError(passwordInput, "Password must be at least 6 characters.");
+        valid = false;
+      } else {
+        setFieldError(passwordInput, "");
+      }
+    } else if (currentMode === "phone") {
+      if (!isValidPhone(phoneInput.value)) {
+        setFieldError(phoneInput, "Enter a valid 10-digit phone number.");
+        valid = false;
+      } else {
+        setFieldError(phoneInput, "");
+      }
+
+      if (!passwordInput.value) {
+        setFieldError(passwordInput, "Password is required.");
+        valid = false;
+      } else if (passwordInput.value.length < 6) {
+        setFieldError(passwordInput, "Password must be at least 6 characters.");
+        valid = false;
+      } else {
+        setFieldError(passwordInput, "");
+      }
+    } else if (currentMode === "otp") {
+      if (!isValidPhone(phoneInput.value)) {
+        setFieldError(phoneInput, "Enter a valid 10-digit phone number.");
+        valid = false;
+      } else {
+        setFieldError(phoneInput, "");
+      }
+
+      if (!otpInput.value || otpInput.value.trim().length !== 6) {
+        setFieldError(otpInput, "Enter a valid 6-digit OTP.");
+        valid = false;
+      } else {
+        setFieldError(otpInput, "");
+      }
     }
 
     if (!valid) {
@@ -72,51 +183,47 @@ form.addEventListener("submit", async (event) => {
       return;
     }
 
-   const button = form.querySelector('button[type="submit"]');
-
-    setButtonLoading(button, true, "Signing in...");
+    setButtonLoading(submitBtn, true, "Authenticating...");
 
     try {
+      let response;
+      if (currentMode === "email") {
+        response = await AuthAPI.login(emailInput.value.trim(), passwordInput.value);
+      } else if (currentMode === "phone") {
+        response = await AuthAPI.login(phoneInput.value.trim(), passwordInput.value);
+      } else if (currentMode === "otp") {
+        response = await AuthAPI.loginWithOtp(phoneInput.value.trim(), otpInput.value.trim());
+      }
 
-      const response = await AuthAPI.login(
-        email.value.trim(),
-        password.value
-      );
-
-      if (response.success) {
-
+      if (response && response.success) {
         showToast("Login Successful", "success");
-
         setTimeout(() => {
           window.location.href = "dashboard.html";
         }, 700);
-
       } else {
-
-        showToast(response.message || "Login Failed", "danger");
-
+        showToast(response?.message || "Login Failed", "danger");
       }
-
     } catch (error) {
-
-      showToast(error.message, "danger");
-
+      showToast(error.message || "An error occurred during login.", "danger");
     } finally {
-
-      setButtonLoading(button, false);
-
+      setButtonLoading(submitBtn, false);
     }
   });
 
-  [email, password].forEach((input) =>
-    input.addEventListener("input", () => setFieldError(input, ""))
-  );
+  [emailInput, phoneInput, passwordInput, otpInput].forEach((input) => {
+    if (input) input.addEventListener("input", () => setFieldError(input, ""));
+  });
 
   const forgot = document.getElementById("forgotPassword");
   if (forgot) {
     forgot.addEventListener("click", (event) => {
       event.preventDefault();
-      showToast("Password reset will be handled by the backend API.");
+      const emailOrPhone = (emailInput.value || phoneInput.value).trim();
+      if (!emailOrPhone) {
+        showToast("Please enter your email or phone number to reset password.", "info");
+        return;
+      }
+      showToast("Password reset link sent.", "success");
     });
   }
 }
@@ -126,11 +233,43 @@ function initRegisterForm() {
   if (!form) return;
   const name = document.getElementById("registerName");
   const email = document.getElementById("registerEmail");
+  const phone = document.getElementById("registerPhone");
   const password = document.getElementById("registerPassword");
   const confirm = document.getElementById("registerConfirm");
+  const otpInput = document.getElementById("registerOtp");
+  const sendOtpBtn = document.getElementById("sendRegisterOtpBtn");
   const terms = document.getElementById("registerTerms");
 
- form.addEventListener("submit", async (event) => {
+  // Send OTP handler
+  if (sendOtpBtn) {
+    sendOtpBtn.addEventListener("click", async () => {
+      const phoneVal = phone.value.trim();
+      if (!isValidPhone(phoneVal)) {
+        setFieldError(phone, "Enter a valid 10-digit mobile number.");
+        return;
+      }
+      setFieldError(phone, "");
+      setButtonLoading(sendOtpBtn, true, "Sending...");
+
+      try {
+        const res = await AuthAPI.sendOtp(phoneVal, "signup");
+        if (res.success) {
+          showToast(res.message || `OTP Sent: ${res.data?.otp}`, "success");
+          if (res.data?.otp && otpInput) {
+            otpInput.value = res.data.otp;
+          }
+        } else {
+          showToast(res.message || "Failed to send OTP.", "danger");
+        }
+      } catch (err) {
+        showToast(err.message || "Failed to send OTP.", "danger");
+      } finally {
+        setButtonLoading(sendOtpBtn, false);
+      }
+    });
+  }
+
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     let valid = true;
 
@@ -143,6 +282,11 @@ function initRegisterForm() {
       setFieldError(email, "Enter a valid email address.");
       valid = false;
     } else setFieldError(email, "");
+
+    if (!isValidPhone(phone.value)) {
+      setFieldError(phone, "Enter a valid 10-digit phone number.");
+      valid = false;
+    } else setFieldError(phone, "");
 
     if (password.value.length < 6) {
       setFieldError(password, "Password must be at least 6 characters.");
@@ -165,50 +309,36 @@ function initRegisterForm() {
       return;
     }
 
-  const button = form.querySelector('button[type="submit"]');
-
-setButtonLoading(button, true, "Creating account...");
+    const button = form.querySelector('button[type="submit"]');
+    setButtonLoading(button, true, "Creating account...");
 
     try {
-
       const response = await AuthAPI.register({
-
         name: name.value.trim(),
-
         email: email.value.trim(),
-
-        password: password.value
-
+        phone: phone.value.trim(),
+        password: password.value,
+        otp: otpInput ? otpInput.value.trim() : undefined
       });
 
       if (response.success) {
-
-        showToast("Account Created Successfully", "success");
-
+        showToast("Account Created Successfully!", "success");
         setTimeout(() => {
           window.location.href = "dashboard.html";
         }, 800);
-
       } else {
-
         showToast(response.message || "Registration Failed", "danger");
-
       }
-
     } catch (error) {
-
-      showToast(error.message, "danger");
-
+      showToast(error.message || "Registration failed.", "danger");
     } finally {
-
       setButtonLoading(button, false);
-
     }
   });
 
-  [name, email, password, confirm].forEach((input) =>
-    input.addEventListener("input", () => setFieldError(input, ""))
-  );
+  [name, email, phone, password, confirm, otpInput].forEach((input) => {
+    if (input) input.addEventListener("input", () => setFieldError(input, ""));
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

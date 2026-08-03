@@ -14,19 +14,39 @@ const handleValidation = (req) => {
   }
 };
 
+// Temporary in-memory OTP cache for registration verification
+const tempOtpStore = {};
+
 // @desc    Register a new user
 // @route   POST /api/auth/register
 // @access  Public
 const register = asyncHandler(async (req, res) => {
   handleValidation(req);
-  const { name, email, password } = req.body;
+  const { name, email, phone, password, otp } = req.body;
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
+  const existingEmail = await User.findOne({ email });
+  if (existingEmail) {
     throw new AppError("An account with this email already exists.", 409);
   }
 
-  const user = await User.create({ name, email, password });
+  const existingPhone = await User.findOne({ phone });
+  if (existingPhone) {
+    throw new AppError("An account with this phone number already exists.", 409);
+  }
+
+  if (otp) {
+    const tempOtpData = tempOtpStore[phone] || tempOtpStore[email];
+    if (!tempOtpData || tempOtpData.code !== otp) {
+      throw new AppError("Invalid OTP code. Please check and try again.", 400);
+    }
+    if (new Date() > tempOtpData.expiresAt) {
+      throw new AppError("OTP has expired. Please request a new OTP.", 400);
+    }
+    delete tempOtpStore[phone];
+    delete tempOtpStore[email];
+  }
+
+  const user = await User.create({ name, email, phone, password });
 
   const verifyToken = user.generateEmailVerificationToken();
   await user.save({ validateBeforeSave: false });
@@ -37,30 +57,115 @@ const register = asyncHandler(async (req, res) => {
   try {
     await sendEmail({ to: user.email, ...template });
   } catch (err) {
-    // Registration should still succeed even if the verification
-    // email fails to send; the user can request a resend later.
     console.error(`Failed to send verification email: ${err.message}`);
   }
 
   sendTokenResponse(res, user._id, 201, user.toSafeObject());
 });
 
-// @desc    Log in an existing user
+// @desc    Log in an existing user (Email or Phone + Password)
 // @route   POST /api/auth/login
 // @access  Public
 const login = asyncHandler(async (req, res) => {
   handleValidation(req);
-  const { email, password } = req.body;
+  const { email, phone, password } = req.body;
 
-  const user = await User.findOne({ email }).select("+password");
+  let query;
+  if (email) {
+    query = { email: email.trim().toLowerCase() };
+  } else if (phone) {
+    query = { phone: phone.trim() };
+  } else {
+    throw new AppError("Email or Phone number is required to login.", 400);
+  }
+
+  const user = await User.findOne(query).select("+password");
 
   if (!user || !(await user.comparePassword(password))) {
-    throw new AppError("Invalid email or password.", 401);
+    throw new AppError("Invalid login credentials or password.", 401);
   }
 
   if (!user.isActive) {
     throw new AppError("This account has been deactivated.", 403);
   }
+
+  user.lastLoginAt = new Date();
+  await user.save({ validateBeforeSave: false });
+
+  sendTokenResponse(res, user._id, 200, user.toSafeObject());
+});
+
+// @desc    Send OTP to phone or email
+// @route   POST /api/auth/send-otp
+// @access  Public
+const sendOtp = asyncHandler(async (req, res) => {
+  const { phone, email, purpose } = req.body;
+  const identifier = (phone || email || "").trim();
+
+  if (!identifier) {
+    throw new AppError("Phone number or email is required to send OTP.", 400);
+  }
+
+  if (purpose === "login") {
+    const userExists = await User.findOne({ $or: [{ phone: identifier }, { email: identifier }] });
+    if (!userExists) {
+      throw new AppError("No registered account found with this phone/email.", 404);
+    }
+  }
+
+  const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+
+  let user = await User.findOne({ $or: [{ phone: identifier }, { email: identifier }] }).select("+otp.code +otp.expiresAt");
+  if (user) {
+    user.otp = { code: otpCode, expiresAt };
+    await user.save({ validateBeforeSave: false });
+  }
+
+  tempOtpStore[identifier] = { code: otpCode, expiresAt };
+
+  sendSuccess(res, 200, `OTP sent successfully. Code: ${otpCode}`, {
+    otp: otpCode,
+    identifier
+  });
+});
+
+// @desc    Log in user using OTP
+// @route   POST /api/auth/login-otp
+// @access  Public
+const loginWithOtp = asyncHandler(async (req, res) => {
+  const { phone, email, otp } = req.body;
+  const identifier = (phone || email || "").trim();
+
+  if (!identifier || !otp) {
+    throw new AppError("Phone/Email and OTP are required.", 400);
+  }
+
+  const user = await User.findOne({ $or: [{ phone: identifier }, { email: identifier }] }).select("+otp.code +otp.expiresAt");
+
+  if (!user) {
+    throw new AppError("No account found with this phone number or email.", 404);
+  }
+
+  const tempOtpData = tempOtpStore[identifier];
+  const userOtpCode = user.otp?.code;
+  const userOtpExpire = user.otp?.expiresAt;
+
+  const validCode = userOtpCode === otp || (tempOtpData && tempOtpData.code === otp);
+  const validExpiry = (userOtpExpire && new Date() <= userOtpExpire) || (tempOtpData && new Date() <= tempOtpData.expiresAt);
+
+  if (!validCode) {
+    throw new AppError("Invalid OTP. Please check and try again.", 400);
+  }
+
+  if (!validExpiry) {
+    throw new AppError("OTP has expired. Please request a new one.", 400);
+  }
+
+  if (user.otp) {
+    user.otp = undefined;
+  }
+  delete tempOtpStore[identifier];
 
   user.lastLoginAt = new Date();
   await user.save({ validateBeforeSave: false });
@@ -157,8 +262,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  // Always return a generic success message, regardless of whether
-  // the email exists, to avoid leaking which emails are registered.
   if (!user) {
     return sendSuccess(
       res,
@@ -233,6 +336,8 @@ const changePassword = asyncHandler(async (req, res) => {
 module.exports = {
   register,
   login,
+  sendOtp,
+  loginWithOtp,
   logout,
   getMe,
   refreshAccessToken,

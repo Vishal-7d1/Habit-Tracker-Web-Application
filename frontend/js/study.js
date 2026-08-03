@@ -196,16 +196,16 @@
       modalEl.setAttribute('tabindex', '-1');
       modalEl.innerHTML = `
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content bg-dark border-secondary shadow-lg">
-            <div class="modal-header border-secondary">
-              <h5 class="modal-title text-light">Delete Study Session</h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-content shadow-lg">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete Study Session</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-light">
+            <div class="modal-body">
               Are you sure you want to delete this study session? This action cannot be undone.
             </div>
-            <div class="modal-footer border-secondary">
-              <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
               <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
             </div>
           </div>
@@ -328,14 +328,14 @@
       : `<span class="badge bg-secondary border border-secondary rounded-pill px-2 py-1"><i class="fa-regular fa-circle me-1"></i>Pending</span>`;
     
     return `
-      <div class="card bg-dark border-secondary shadow-sm mb-3 rounded-4 hover-lift" style="border-left: 4px solid #FFC107 !important;">
+      <div class="card shadow-sm mb-3 rounded-4 hover-lift" style="border-left: 4px solid var(--gold) !important;">
         <div class="card-body p-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
           <div class="flex-grow-1">
             <div class="d-flex align-items-center gap-2 mb-1">
               <h6 class="text-warning fw-bold mb-0">${timeFormatted}</h6>
               <span class="badge ${getPriorityClass(session.priority || 'Medium')} rounded-pill px-2 py-1" style="font-size: 0.65rem;">${session.priority || 'Medium'}</span>
             </div>
-            <h5 class="fw-bold text-light mb-2 mt-1">${escapeHtml(session.subject || session.topic || '')}</h5>
+            <h5 class="fw-bold mb-2 mt-1">${escapeHtml(session.subject || session.topic || '')}</h5>
             <div class="d-flex align-items-center gap-3">
               ${statusBadge}
             </div>

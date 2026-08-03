@@ -11,6 +11,8 @@ router.get("/test", (req, res) => {
 const {
   register,
   login,
+  sendOtp,
+  loginWithOtp,
   logout,
   getMe,
   refreshAccessToken,
@@ -32,6 +34,8 @@ const {
 
 router.post("/register", registerValidator, register);
 router.post("/login", loginValidator, login);
+router.post("/send-otp", sendOtp);
+router.post("/login-otp", loginWithOtp);
 router.post("/logout", protect, logout);
 router.get("/me", protect, getMe);
 router.post("/refresh", refreshAccessToken);

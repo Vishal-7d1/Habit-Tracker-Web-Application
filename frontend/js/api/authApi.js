@@ -19,13 +19,40 @@ const AuthAPI = {
     },
 
     /**
-     * Login User
+     * Login User (Email or Phone + Password)
      */
-    async login(email, password) {
-        const res = await API.post("/auth/login", {
-            email,
-            password
-        });
+    async login(payload, password) {
+        let body = {};
+        if (typeof payload === 'object') {
+            body = payload;
+        } else if (payload.includes('@')) {
+            body = { email: payload, password };
+        } else {
+            body = { phone: payload, password };
+        }
+        const res = await API.post("/auth/login", body);
+        if (res.success && res.accessToken) {
+            localStorage.setItem("ht_token", res.accessToken);
+        }
+        return res;
+    },
+
+    /**
+     * Send OTP to Phone or Email
+     */
+    async sendOtp(identifier, purpose = "general") {
+        const isEmail = identifier.includes('@');
+        const body = isEmail ? { email: identifier, purpose } : { phone: identifier, purpose };
+        return await API.post("/auth/send-otp", body);
+    },
+
+    /**
+     * Login User via OTP
+     */
+    async loginWithOtp(identifier, otp) {
+        const isEmail = identifier.includes('@');
+        const body = isEmail ? { email: identifier, otp } : { phone: identifier, otp };
+        const res = await API.post("/auth/login-otp", body);
         if (res.success && res.accessToken) {
             localStorage.setItem("ht_token", res.accessToken);
         }

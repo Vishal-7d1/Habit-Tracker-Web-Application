@@ -18,28 +18,62 @@
     <main class="auth-page">
       <section class="auth-card">
         <a class="auth-brand" href="index.html">
-          <span class="brand-mark"><i class="fa-solid fa-crown" aria-hidden="true"></i></span>
+          <span class="brand-mark"><img src="images/logo.png" alt="HabitForge Logo" class="brand-logo-img" /></span>
           <span class="brand-text">HabitForge</span>
         </a>
         <h1>Welcome Back</h1>
         <p class="auth-lead">Sign in to continue today's study plan and habits.</p>
 
+        <!-- Login Options Navigation -->
+        <div class="login-tabs" role="tablist">
+          <button class="login-tab-btn active" type="button" id="tabEmail" data-mode="email">
+            <i class="fa-solid fa-envelope"></i> Email
+          </button>
+          <button class="login-tab-btn" type="button" id="tabPhone" data-mode="phone">
+            <i class="fa-solid fa-phone"></i> Phone
+          </button>
+          <button class="login-tab-btn" type="button" id="tabOtp" data-mode="otp">
+            <i class="fa-solid fa-key"></i> OTP Login
+          </button>
+        </div>
+
         <form id="loginForm" novalidate>
-          <div class="auth-field">
+          <!-- Email Field (Mode: Email & OTP) -->
+          <div class="auth-field" id="emailGroup">
             <label class="form-label" for="loginEmail">Email address</label>
             <input class="form-control" type="email" id="loginEmail" name="email" autocomplete="email" placeholder="you@college.edu" />
             <p class="field-error" id="loginEmailError" role="alert"></p>
           </div>
 
-          <div class="auth-field">
+          <!-- Phone Field (Mode: Phone & OTP) -->
+          <div class="auth-field d-none" id="phoneGroup">
+            <label class="form-label" for="loginPhone">Phone number</label>
+            <input class="form-control" type="tel" id="loginPhone" name="phone" placeholder="10-digit mobile number (e.g. 9876543210)" maxlength="10" />
+            <p class="field-error" id="loginPhoneError" role="alert"></p>
+          </div>
+
+          <!-- Password Field (Mode: Email & Phone) -->
+          <div class="auth-field" id="passwordGroup">
             <label class="form-label" for="loginPassword">Password</label>
             <div class="password-wrap">
-              <input class="form-control" type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="Enter your password" />
+              <input class="form-control" type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="Minimum 6 characters" />
               <button class="toggle-password" type="button" data-target="loginPassword" aria-label="Show password">
                 <i class="fa-solid fa-eye" aria-hidden="true"></i>
               </button>
             </div>
             <p class="field-error" id="loginPasswordError" role="alert"></p>
+          </div>
+
+          <!-- OTP Field & Send Button (Mode: OTP) -->
+          <div class="auth-field d-none" id="otpGroup">
+            <label class="form-label" for="loginOtp">Enter 6-digit OTP</label>
+            <div class="input-with-btn">
+              <input class="form-control" type="text" id="loginOtp" name="otp" placeholder="6-digit code" maxlength="6" />
+              <button class="btn btn-outline-gold btn-send-otp" type="button" id="sendLoginOtpBtn">
+                Send OTP
+              </button>
+            </div>
+            <p class="field-error" id="loginOtpError" role="alert"></p>
           </div>
 
           <div class="auth-options">
@@ -50,7 +84,7 @@
             <a href="#" id="forgotPassword">Forgot password?</a>
           </div>
 
-          <button class="btn btn-gold w-100" type="submit">Login</button>
+          <button class="btn btn-gold w-100" type="submit" id="loginSubmitBtn">Login</button>
         </form>
 
         <p class="auth-footer">Don't have an account? <a href="register.html">Create one</a></p>

@@ -16,25 +16,27 @@ const registerValidator = [
     .withMessage("Please provide a valid email address")
     .normalizeEmail(),
 
+  body("phone")
+    .trim()
+    .notEmpty()
+    .withMessage("Phone number is required")
+    .matches(/^[0-9]{10}$/)
+    .withMessage("Please enter a valid 10-digit phone number"),
+
   body("password")
     .notEmpty()
     .withMessage("Password is required")
-    .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters")
-    .matches(/\d/)
-    .withMessage("Password must contain at least one number")
-    .matches(/[a-zA-Z]/)
-    .withMessage("Password must contain at least one letter"),
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters"),
 ];
 
 const loginValidator = [
-  body("email")
-    .trim()
-    .notEmpty()
-    .withMessage("Email is required")
-    .isEmail()
-    .withMessage("Please provide a valid email address")
-    .normalizeEmail(),
+  body().custom((value, { req }) => {
+    if (!req.body.email && !req.body.phone) {
+      throw new Error("Please provide either email or phone number");
+    }
+    return true;
+  }),
 
   body("password").notEmpty().withMessage("Password is required"),
 ];
@@ -55,12 +57,8 @@ const resetPasswordValidator = [
   body("password")
     .notEmpty()
     .withMessage("Password is required")
-    .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters")
-    .matches(/\d/)
-    .withMessage("Password must contain at least one number")
-    .matches(/[a-zA-Z]/)
-    .withMessage("Password must contain at least one letter"),
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters"),
 ];
 
 const changePasswordValidator = [
@@ -69,12 +67,8 @@ const changePasswordValidator = [
   body("newPassword")
     .notEmpty()
     .withMessage("New password is required")
-    .isLength({ min: 8 })
-    .withMessage("New password must be at least 8 characters")
-    .matches(/\d/)
-    .withMessage("New password must contain at least one number")
-    .matches(/[a-zA-Z]/)
-    .withMessage("New password must contain at least one letter"),
+    .isLength({ min: 6 })
+    .withMessage("New password must be at least 6 characters"),
 ];
 
 module.exports = {

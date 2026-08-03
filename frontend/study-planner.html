@@ -38,7 +38,7 @@
             <i class="fa-solid fa-bars" aria-hidden="true"></i>
           </button>
           <strong class="font-heading">Study Planner</strong>
-          <span class="brand-mark"><i class="fa-solid fa-crown" aria-hidden="true"></i></span>
+          <span class="brand-mark"><img src="images/logo.png" alt="HabitForge Logo" class="brand-logo-img" /></span>
         </div>
 
         <div class="page-wrap">
@@ -54,13 +54,12 @@
           </header>
 
           <div class="row g-4 section-gap">
-            
-            <!-- ========================================== -->
+                        <!-- ========================================== -->
             <!-- LEFT PANEL: SETUP & BUILDER (40%)          -->
             <!-- ========================================== -->
             <div class="col-12 col-xl-5">
               <section class="card-panel shadow-sm border-0 h-100">
-                <div class="card-head border-bottom border-secondary pb-3 mb-4">
+                <div class="card-head border-bottom pb-3 mb-4">
                   <div>
                     <h2 class="section-title">Study Schedule Setup</h2>
                     <p class="section-subtitle mb-0">Create your weekly study plan.</p>
@@ -72,8 +71,8 @@
                   <div class="row g-3 mb-3">
                     <!-- Semester -->
                     <div class="col-sm-6">
-                      <label class="form-label text-uppercase text-secondary small fw-bold" for="plannerSemester">Semester</label>
-                      <select class="form-select bg-dark border-secondary text-light" id="plannerSemester" aria-label="Select Semester">
+                      <label class="form-label text-uppercase small fw-bold" for="plannerSemester">Semester</label>
+                      <select class="form-select" id="plannerSemester" aria-label="Select Semester">
                         <option>1st Semester</option>
                         <option>2nd Semester</option>
                         <option>3rd Semester</option>
@@ -87,22 +86,22 @@
                     
                     <!-- Course -->
                     <div class="col-sm-6">
-                      <label class="form-label text-uppercase text-secondary small fw-bold" for="plannerCourse">Course</label>
-                      <input class="form-control bg-dark border-secondary text-light" type="text" id="plannerCourse" value="Computer Science" placeholder="e.g. B.Tech CS" aria-label="Course Name" />
+                      <label class="form-label text-uppercase small fw-bold" for="plannerCourse">Course</label>
+                      <input class="form-control" type="text" id="plannerCourse" value="Computer Science" placeholder="e.g. B.Tech CS" aria-label="Course Name" />
                     </div>
                   </div>
 
                   <div class="row g-3 mb-3">
                     <!-- Subject -->
                     <div class="col-sm-6">
-                      <label class="form-label text-uppercase text-secondary small fw-bold" for="slotSubject">Subject</label>
-                      <input class="form-control bg-dark border-secondary text-light" type="text" id="slotSubject" placeholder="e.g. Java" aria-label="Subject Name" />
+                      <label class="form-label text-uppercase small fw-bold" for="slotSubject">Subject</label>
+                      <input class="form-control" type="text" id="slotSubject" placeholder="e.g. Java" aria-label="Subject Name" />
                     </div>
                     
                     <!-- Study Day -->
                     <div class="col-sm-6">
-                      <label class="form-label text-uppercase text-secondary small fw-bold" for="slotDay">Study Day</label>
-                      <select class="form-select bg-dark border-secondary text-light" id="slotDay" aria-label="Select Study Day">
+                      <label class="form-label text-uppercase small fw-bold" for="slotDay">Study Day</label>
+                      <select class="form-select" id="slotDay" aria-label="Select Study Day">
                         <option selected>Monday</option>
                         <option>Tuesday</option>
                         <option>Wednesday</option>
@@ -117,21 +116,21 @@
                   <div class="row g-3 mb-3">
                     <!-- Start Time -->
                     <div class="col-sm-6">
-                      <label class="form-label text-uppercase text-secondary small fw-bold" for="slotStartTime">Start Time</label>
-                      <input class="form-control bg-dark border-secondary text-light" type="time" id="slotStartTime" value="07:00" aria-label="Start Time" />
+                      <label class="form-label text-uppercase small fw-bold" for="slotStartTime">Start Time</label>
+                      <input class="form-control" type="time" id="slotStartTime" value="07:00" aria-label="Start Time" />
                     </div>
                     
                     <!-- End Time -->
                     <div class="col-sm-6">
-                      <label class="form-label text-uppercase text-secondary small fw-bold" for="slotEndTime">End Time</label>
-                      <input class="form-control bg-dark border-secondary text-light" type="time" id="slotEndTime" value="08:00" aria-label="End Time" />
+                      <label class="form-label text-uppercase small fw-bold" for="slotEndTime">End Time</label>
+                      <input class="form-control" type="time" id="slotEndTime" value="08:00" aria-label="End Time" />
                     </div>
                   </div>
 
                   <!-- Priority -->
                   <div class="mb-4">
-                    <label class="form-label text-uppercase text-secondary small fw-bold" for="slotPriority">Priority</label>
-                    <select class="form-select bg-dark border-secondary text-light" id="slotPriority" aria-label="Select Priority">
+                    <label class="form-label text-uppercase small fw-bold" for="slotPriority">Priority</label>
+                    <select class="form-select" id="slotPriority" aria-label="Select Priority">
                       <option selected value="High">High</option>
                       <option value="Medium">Medium</option>
                       <option value="Low">Low</option>
@@ -156,7 +155,7 @@
 
               <!-- CARD 2: WEEKLY TIMETABLE -->
               <section class="card-panel shadow-sm border-0">
-                <div class="card-head border-bottom border-secondary pb-3 mb-4">
+                <div class="card-head border-bottom pb-3 mb-4">
                   <h2 class="section-title">Weekly Timetable</h2>
                   <p class="section-subtitle mb-0">Your weekly study plan.</p>
                 </div>
@@ -165,9 +164,9 @@
                 <div class="accordion accordion-flush bg-transparent" id="weeklyTimetableAccordion">
                   
                   <!-- MONDAY -->
-                  <div class="accordion-item bg-transparent border-secondary mb-2">
+                  <div class="accordion-item mb-2">
                     <h2 class="accordion-header">
-                      <button class="accordion-button bg-dark text-light shadow-none fw-bold rounded border border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMonday" aria-expanded="true" aria-controls="collapseMonday">
+                      <button class="accordion-button shadow-none fw-bold rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMonday" aria-expanded="true" aria-controls="collapseMonday">
                         Monday
                       </button>
                     </h2>
@@ -175,14 +174,14 @@
                       <div class="accordion-body px-0 pt-3 pb-2">
                         
                         <!-- Accordion Session Card -->
-                        <div class="card bg-dark border-warning shadow-sm mb-2 rounded-3 hover-lift border-opacity-50">
+                        <div class="card shadow-sm mb-2 rounded-3 hover-lift">
                           <div class="card-body p-3 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
                             <div>
                               <div class="d-flex align-items-center gap-2 mb-1">
                                 <span class="text-warning fw-bold small">07:00 AM - 08:00 AM</span>
                                 <span class="badge bg-danger bg-opacity-25 text-danger border border-danger rounded-pill px-2 py-0" style="font-size: 0.7rem;">High Priority</span>
                               </div>
-                              <h6 class="text-light fw-bold mb-0">Java</h6>
+                              <h6 class="fw-bold mb-0">Java</h6>
                             </div>
                             <div class="d-flex gap-2">
                               <button class="btn btn-sm btn-outline-success" aria-label="Complete Session">
@@ -203,9 +202,9 @@
                   </div>
 
                   <!-- TUESDAY -->
-                  <div class="accordion-item bg-transparent border-secondary mb-2">
+                  <div class="accordion-item mb-2">
                     <h2 class="accordion-header">
-                      <button class="accordion-button collapsed bg-dark text-light shadow-none fw-bold rounded border border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTuesday" aria-expanded="false" aria-controls="collapseTuesday">
+                      <button class="accordion-button collapsed shadow-none fw-bold rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTuesday" aria-expanded="false" aria-controls="collapseTuesday">
                         Tuesday
                       </button>
                     </h2>
@@ -213,14 +212,14 @@
                       <div class="accordion-body px-0 pt-3 pb-2">
                         
                         <!-- Accordion Session Card -->
-                        <div class="card bg-dark border-warning shadow-sm mb-2 rounded-3 hover-lift border-opacity-50">
+                        <div class="card shadow-sm mb-2 rounded-3 hover-lift">
                           <div class="card-body p-3 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
                             <div>
                               <div class="d-flex align-items-center gap-2 mb-1">
                                 <span class="text-warning fw-bold small">06:00 PM - 07:30 PM</span>
                                 <span class="badge bg-warning bg-opacity-25 text-warning border border-warning rounded-pill px-2 py-0" style="font-size: 0.7rem;">Medium Priority</span>
                               </div>
-                              <h6 class="text-light fw-bold mb-0">Database Management</h6>
+                              <h6 class="fw-bold mb-0">Database Management</h6>
                             </div>
                             <div class="d-flex gap-2">
                               <button class="btn btn-sm btn-outline-success" aria-label="Complete Session">
@@ -241,9 +240,9 @@
                   </div>
 
                   <!-- WEDNESDAY -->
-                  <div class="accordion-item bg-transparent border-secondary mb-2">
+                  <div class="accordion-item mb-2">
                     <h2 class="accordion-header">
-                      <button class="accordion-button collapsed bg-dark text-light shadow-none fw-bold rounded border border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWednesday" aria-expanded="false" aria-controls="collapseWednesday">
+                      <button class="accordion-button collapsed shadow-none fw-bold rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWednesday" aria-expanded="false" aria-controls="collapseWednesday">
                         Wednesday
                       </button>
                     </h2>
@@ -255,9 +254,9 @@
                   </div>
 
                   <!-- THURSDAY -->
-                  <div class="accordion-item bg-transparent border-secondary mb-2">
+                  <div class="accordion-item mb-2">
                     <h2 class="accordion-header">
-                      <button class="accordion-button collapsed bg-dark text-light shadow-none fw-bold rounded border border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThursday" aria-expanded="false" aria-controls="collapseThursday">
+                      <button class="accordion-button collapsed shadow-none fw-bold rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThursday" aria-expanded="false" aria-controls="collapseThursday">
                         Thursday
                       </button>
                     </h2>
@@ -269,9 +268,9 @@
                   </div>
 
                   <!-- FRIDAY -->
-                  <div class="accordion-item bg-transparent border-secondary mb-2">
+                  <div class="accordion-item mb-2">
                     <h2 class="accordion-header">
-                      <button class="accordion-button collapsed bg-dark text-light shadow-none fw-bold rounded border border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFriday" aria-expanded="false" aria-controls="collapseFriday">
+                      <button class="accordion-button collapsed shadow-none fw-bold rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFriday" aria-expanded="false" aria-controls="collapseFriday">
                         Friday
                       </button>
                     </h2>
@@ -283,9 +282,9 @@
                   </div>
 
                   <!-- SATURDAY -->
-                  <div class="accordion-item bg-transparent border-secondary mb-2">
+                  <div class="accordion-item mb-2">
                     <h2 class="accordion-header">
-                      <button class="accordion-button collapsed bg-dark text-light shadow-none fw-bold rounded border border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSaturday" aria-expanded="false" aria-controls="collapseSaturday">
+                      <button class="accordion-button collapsed shadow-none fw-bold rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSaturday" aria-expanded="false" aria-controls="collapseSaturday">
                         Saturday
                       </button>
                     </h2>
@@ -297,9 +296,9 @@
                   </div>
 
                   <!-- SUNDAY -->
-                  <div class="accordion-item bg-transparent border-secondary mb-2">
+                  <div class="accordion-item mb-2">
                     <h2 class="accordion-header">
-                      <button class="accordion-button collapsed bg-dark text-light shadow-none fw-bold rounded border border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSunday" aria-expanded="false" aria-controls="collapseSunday">
+                      <button class="accordion-button collapsed shadow-none fw-bold rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSunday" aria-expanded="false" aria-controls="collapseSunday">
                         Sunday
                       </button>
                     </h2>
@@ -312,7 +311,6 @@
 
                 </div>
               </section>
-
             </div>
           </div>
         </div>

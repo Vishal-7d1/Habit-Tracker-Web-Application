@@ -482,7 +482,7 @@ function renderSidebar() {
 
   host.innerHTML = `
     <a class="sidebar-brand" href="dashboard.html">
-      <span class="brand-mark"><i class="fa-solid fa-crown" aria-hidden="true"></i></span>
+      <span class="brand-mark"><img src="images/logo.png" alt="HabitForge Logo" class="brand-logo-img" /></span>
       <span class="brand-text">HabitForge<span>Study &amp; Habit OS</span></span>
     </a>
     <p class="sidebar-label">Menu</p>

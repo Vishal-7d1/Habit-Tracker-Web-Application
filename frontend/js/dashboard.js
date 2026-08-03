@@ -266,11 +266,10 @@ async function renderJournalPreview() {
   let entries = [];
   if (window.JournalAPI) {
     const res = await JournalAPI.getJournalEntries({ limit: 2 });
-    if (res.success && res.data) {
+    if (res && res.success && res.data) {
       entries = res.data.map(e => ({ date: e.date, mood: e.mood, text: e.content || e.title }));
     }
-  }
-  if (!entries.length) {
+  } else {
     entries = HabitStore.loadJournal().slice(0, 2);
   }
 
@@ -300,7 +299,7 @@ async function renderRewardPreview() {
   let rewards = [];
   if (window.RewardAPI) {
     const res = await RewardAPI.getRewards();
-    if (res.success && res.data) {
+    if (res && res.success && res.data) {
       rewards = res.data;
     }
   }
@@ -308,8 +307,8 @@ async function renderRewardPreview() {
   const badges = rewards.length
     ? rewards.slice(0, 3).map(r => ({ name: r.title, icon: r.icon || "fa-award", unlocked: true }))
     : [
-        { name: "First Step", icon: "fa-shoe-prints", unlocked: true },
-        { name: "7 Day Streak", icon: "fa-fire", unlocked: true },
+        { name: "First Step", icon: "fa-shoe-prints", unlocked: false },
+        { name: "7 Day Streak", icon: "fa-fire", unlocked: false },
         { name: "Study Champion", icon: "fa-trophy", unlocked: false },
       ];
 
@@ -349,15 +348,13 @@ function buildDashboardCharts() {
     if (weeklyChart) weeklyChart.destroy();
     
     let labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    let studyData = [80, 65, 90, 72, 85, 60, 78];
-    let habitData = [70, 75, 85, 66, 90, 55, 83];
+    let studyData = [0, 0, 0, 0, 0, 0, 0];
+    let habitData = [0, 0, 0, 0, 0, 0, 0];
 
-    if (cachedDashboardData && cachedDashboardData.weeklyChart) {
+    if (cachedDashboardData && cachedDashboardData.weeklyChart && Array.isArray(cachedDashboardData.weeklyChart)) {
       const wc = cachedDashboardData.weeklyChart;
-      if (Array.isArray(wc)) {
-        labels = wc.map(item => item.day || item.date || "");
-        habitData = wc.map(item => item.completionPercentage || 0);
-      }
+      labels = wc.map(item => item.day || item.date || "");
+      habitData = wc.map(item => item.completionPercentage || 0);
     }
 
     weeklyChart = new Chart(weeklyCanvas, {
@@ -393,7 +390,7 @@ function buildDashboardCharts() {
         datasets: [
           {
             label: "Monthly consistency %",
-            data: [68, 74, 81, 86],
+            data: [0, 0, 0, 0],
             borderColor: colors.gold,
             backgroundColor: "rgba(212,175,55,.16)",
             fill: true,
@@ -483,13 +480,17 @@ async function loadDashboardData() {
     }
     if (habitsRes && habitsRes.success) {
       cachedHabits = habitsRes.data;
-    } else {
+    } else if (!window.HabitAPI) {
       cachedHabits = HabitStore.loadHabits();
+    } else {
+      cachedHabits = [];
     }
     if (studyRes && studyRes.success) {
       cachedStudySessions = studyRes.data;
-    } else {
+    } else if (!window.StudyAPI) {
       cachedStudySessions = HabitStore.loadStudyPlan();
+    } else {
+      cachedStudySessions = [];
     }
 
     renderWelcome();

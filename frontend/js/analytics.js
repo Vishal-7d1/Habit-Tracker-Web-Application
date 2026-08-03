@@ -57,22 +57,35 @@ async function buildAnalyticsSummary() {
   
   if (liveAnalyticsData.successRate) {
     const sr = liveAnalyticsData.successRate;
-    document.getElementById("summaryToday").textContent = `${sr.successRate || sr.overallRate || 85}%`;
-    document.getElementById("summaryWeekly").textContent = `${sr.weeklyRate || 76}%`;
-    document.getElementById("summaryMonthly").textContent = `${sr.monthlyRate || 82}%`;
-    document.getElementById("summaryStreak").textContent = `${sr.longestStreak || 12} days`;
+    document.getElementById("summaryToday").textContent = `${sr.successRate || sr.overallRate || 0}%`;
+    document.getElementById("summaryWeekly").textContent = `${sr.weeklyRate || 0}%`;
+    document.getElementById("summaryMonthly").textContent = `${sr.monthlyRate || 0}%`;
+    document.getElementById("summaryStreak").textContent = `${sr.longestStreak || 0} days`;
   } else {
-    const habits = HabitStore.loadHabits();
-    const tasks = HabitStore.loadTodayTasks();
-    const habitPct = percentage(habits.filter((h) => h.completedToday).length, habits.length);
-    const studyPct = percentage(tasks.filter((t) => t.completed).length, tasks.length);
-    const overall = Math.round((habitPct + studyPct) / 2);
+    let habits = [];
+    let tasks = [];
+    if (window.HabitAPI) {
+      const hRes = await HabitAPI.getHabits();
+      if (hRes && hRes.success) habits = hRes.data;
+    } else {
+      habits = HabitStore.loadHabits();
+    }
+    if (window.StudyAPI) {
+      const sRes = await StudyAPI.getStudySessions();
+      if (sRes && sRes.success) tasks = sRes.data;
+    } else {
+      tasks = HabitStore.loadTodayTasks();
+    }
+
+    const habitPct = habits.length ? percentage(habits.filter((h) => h.completedToday).length, habits.length) : 0;
+    const studyPct = tasks.length ? percentage(tasks.filter((t) => t.completed).length, tasks.length) : 0;
+    const overall = (habits.length || tasks.length) ? Math.round((habitPct + studyPct) / (habits.length && tasks.length ? 2 : 1)) : 0;
 
     document.getElementById("summaryToday").textContent = `${overall}%`;
-    document.getElementById("summaryWeekly").textContent = "76%";
-    document.getElementById("summaryMonthly").textContent = "82%";
+    document.getElementById("summaryWeekly").textContent = `${habitPct}%`;
+    document.getElementById("summaryMonthly").textContent = `${overall}%`;
     document.getElementById("summaryStreak").textContent = `${habits.reduce(
-      (max, habit) => Math.max(max, habit.currentStreak),
+      (max, habit) => Math.max(max, habit.currentStreak || 0),
       0
     )} days`;
   }
@@ -91,7 +104,7 @@ function buildAnalyticsCharts() {
         datasets: [
           {
             label: "Completion %",
-            data: [10, 32, 48, 55, 72, 88],
+            data: [0, 0, 0, 0, 0, 0],
             borderColor: colors.gold,
             backgroundColor: "rgba(212,175,55,.16)",
             fill: true,
@@ -106,8 +119,8 @@ function buildAnalyticsCharts() {
   const weeklyCanvas = document.getElementById("weeklyProgressChart");
   if (weeklyCanvas) {
     let labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    let studyData = [80, 65, 90, 72, 85, 60, 78];
-    let habitData = [70, 75, 85, 66, 90, 55, 83];
+    let studyData = [0, 0, 0, 0, 0, 0, 0];
+    let habitData = [0, 0, 0, 0, 0, 0, 0];
 
     if (liveAnalyticsData.weekly && Array.isArray(liveAnalyticsData.weekly)) {
       labels = liveAnalyticsData.weekly.map(item => item.day || item.date || "");
@@ -146,7 +159,7 @@ function buildAnalyticsCharts() {
         datasets: [
           {
             label: "Consistency %",
-            data: [68, 74, 81, 86],
+            data: [0, 0, 0, 0],
             borderColor: colors.gold,
             backgroundColor: "rgba(212,175,55,.14)",
             fill: true,
@@ -166,7 +179,7 @@ function buildAnalyticsCharts() {
         labels: ["Study completed", "Habits completed", "Pending"],
         datasets: [
           {
-            data: [42, 38, 20],
+            data: [0, 0, 0],
             backgroundColor: [colors.gold, "#6b7280", "rgba(120,120,120,.35)"],
             borderWidth: 0,
           },
@@ -182,19 +195,19 @@ function buildAnalyticsCharts() {
 
   const subjectCanvas = document.getElementById("subjectChart");
   if (subjectCanvas) {
-    const plan = HabitStore.loadStudyPlan();
+    const plan = window.StudyAPI ? [] : HabitStore.loadStudyPlan();
     const subjects = [...new Set(plan.map((task) => task.subject))];
     analyticsCharts.subjects = new Chart(subjectCanvas, {
       type: "bar",
       data: {
-        labels: subjects,
+        labels: subjects.length ? subjects : ["No Data"],
         datasets: [
           {
             label: "Subject completion %",
-            data: subjects.map((subject) => {
+            data: subjects.length ? subjects.map((subject) => {
               const items = plan.filter((task) => task.subject === subject);
               return percentage(items.filter((task) => task.completed).length, items.length);
-            }),
+            }) : [0],
             backgroundColor: colors.gold,
             borderRadius: 6,
           },
@@ -209,16 +222,12 @@ function buildAnalyticsCharts() {
     let categories = [];
     let catData = [];
 
-    if (liveAnalyticsData.category && Array.isArray(liveAnalyticsData.category)) {
+    if (liveAnalyticsData.category && Array.isArray(liveAnalyticsData.category) && liveAnalyticsData.category.length) {
       categories = liveAnalyticsData.category.map(c => c.category || c._id);
       catData = liveAnalyticsData.category.map(c => c.completionPercentage || c.count || 0);
     } else {
-      const habits = HabitStore.loadHabits();
-      categories = [...new Set(habits.map((habit) => habit.category))];
-      catData = categories.map((category) => {
-        const items = habits.filter((habit) => habit.category === category);
-        return percentage(items.filter((habit) => habit.completedToday).length, items.length);
-      });
+      categories = ["No Data"];
+      catData = [0];
     }
 
     analyticsCharts.categories = new Chart(catCanvas, {

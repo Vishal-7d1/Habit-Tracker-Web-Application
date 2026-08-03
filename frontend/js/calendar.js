@@ -19,7 +19,7 @@ async function buildCalendarEvents() {
     }
   }
 
-  if (!habits.length && !studySessions.length) {
+  if (!habits.length && !studySessions.length && !window.CalendarAPI) {
     studySessions = HabitStore.loadStudyPlan();
     habits = HabitStore.loadHabits();
   }

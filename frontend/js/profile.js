@@ -3,7 +3,7 @@
    ========================================================== */
 
 async function renderProfile() {
-  let profile = window.currentUser || HabitStore.loadProfile();
+  let profile = window.currentUser || {};
 
   if (window.ProfileAPI) {
     const res = await ProfileAPI.getProfile();
@@ -11,12 +11,14 @@ async function renderProfile() {
       profile = res.data;
       window.currentUser = profile;
     }
+  } else if (!window.currentUser) {
+    profile = HabitStore.loadProfile();
   }
 
   const name = profile.name || "Student";
   const email = profile.email || "";
-  const semester = profile.semester || "7th Semester";
-  const branch = profile.branch || "Computer Science & Engineering";
+  const semester = profile.semester || "Not specified";
+  const branch = profile.branch || profile.bio || "Not specified";
   const joined = profile.createdAt ? formatDate(profile.createdAt) : profile.joined || "Recently";
 
   document.getElementById("profileName").textContent = name;
@@ -28,25 +30,54 @@ async function renderProfile() {
 
   document.getElementById("editName").value = name;
   document.getElementById("editEmail").value = email;
-  document.getElementById("editSemester").value = semester;
-  document.getElementById("editBranch").value = branch;
+  document.getElementById("editSemester").value = semester === "Not specified" ? "" : semester;
+  document.getElementById("editBranch").value = branch === "Not specified" ? "" : branch;
   document.getElementById("editGoal").value = profile.dailyGoal || 4;
 
-  const habits = HabitStore.loadHabits();
-  const plan = HabitStore.loadStudyPlan();
-  const completedHabits = habits.filter((habit) => habit.completedToday).length;
+  let habits = [];
+  if (window.HabitAPI) {
+    const res = await HabitAPI.getHabits();
+    if (res && res.success) habits = res.data;
+  } else {
+    habits = HabitStore.loadHabits();
+  }
+
+  let plan = [];
+  if (window.StudyAPI) {
+    const res = await StudyAPI.getStudySessions();
+    if (res && res.success) plan = res.data;
+  } else {
+    plan = HabitStore.loadStudyPlan();
+  }
+
+  let rewards = [];
+  if (window.RewardAPI) {
+    const res = await RewardAPI.getRewards();
+    if (res && res.success) rewards = res.data;
+  }
+
+  const today = isoDate(0);
+  const completedHabits = habits.filter((h) => {
+    return h.completedToday || (h.completionLogs && h.completionLogs.some(l => l.date === today && l.completed));
+  }).length;
   const completedTasks = plan.filter((task) => task.completed).length;
 
-  document.getElementById("profileStreak").textContent = `${habits.reduce(
-    (max, habit) => Math.max(max, habit.currentStreak),
+  const currentStreak = habits.reduce(
+    (max, habit) => Math.max(max, habit.currentStreak || 0),
     0
-  )} days`;
+  );
+
+  const habitPct = habits.length ? percentage(completedHabits, habits.length) : 0;
+  const studyPct = plan.length ? percentage(completedTasks, plan.length) : 0;
+  const overallAvg = (habits.length || plan.length)
+    ? Math.round((habitPct + studyPct) / (habits.length && plan.length ? 2 : 1))
+    : 0;
+
+  document.getElementById("profileStreak").textContent = `${currentStreak} days`;
   document.getElementById("profileHabitsDone").textContent = completedHabits;
   document.getElementById("profileTasksDone").textContent = completedTasks;
-  document.getElementById("profileAverage").textContent = `${Math.round(
-    (percentage(completedHabits, habits.length) + percentage(completedTasks, plan.length)) / 2
-  )}%`;
-  document.getElementById("profileBadges").textContent = "2";
+  document.getElementById("profileAverage").textContent = `${overallAvg}%`;
+  document.getElementById("profileBadges").textContent = rewards.length;
 }
 
 function initProfileForms() {

@@ -245,7 +245,7 @@ const DEMO_REMINDERS = [
    Each function below is the single place to swap in a REST call. */
 const HabitStore = {
   loadHabits() {
-    return Store.read(STORAGE_KEYS.habits, null) || this.seedHabits();
+    return Store.read(STORAGE_KEYS.habits, []);
   },
   seedHabits() {
     const habits = JSON.parse(JSON.stringify(DEMO_HABITS));
@@ -270,7 +270,7 @@ const HabitStore = {
     return this.saveHabits(this.loadHabits().filter((item) => item.id !== id));
   },
   loadStudyPlan() {
-    return Store.read(STORAGE_KEYS.studyPlan, null) || this.seedStudyPlan();
+    return Store.read(STORAGE_KEYS.studyPlan, []);
   },
   seedStudyPlan() {
     const plan = JSON.parse(JSON.stringify(DEMO_STUDY_PLAN));
@@ -294,17 +294,17 @@ const HabitStore = {
     return this.loadStudyPlan().filter((task) => task.date === today);
   },
   loadReminders() {
-    return DEMO_REMINDERS;
+    return [];
   },
   loadProfile() {
-    return Store.read(STORAGE_KEYS.profile, DEMO_PROFILE);
+    return Store.read(STORAGE_KEYS.profile, { name: "Student", email: "", semester: "Not specified", branch: "Not specified" });
   },
   saveProfile(profile) {
     Store.write(STORAGE_KEYS.profile, profile);
     return profile;
   },
   loadJournal() {
-    return Store.read(STORAGE_KEYS.journal, null) || this.seedJournal();
+    return Store.read(STORAGE_KEYS.journal, []);
   },
   seedJournal() {
     const entries = [

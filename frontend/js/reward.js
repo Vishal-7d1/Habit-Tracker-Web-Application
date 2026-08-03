@@ -20,14 +20,47 @@ async function rewardProgress() {
     }
   }
 
-  const habits = HabitStore.loadHabits();
-  const plan = HabitStore.loadStudyPlan();
+  let habits = [];
+  if (window.HabitAPI) {
+    const res = await HabitAPI.getHabits();
+    if (res && res.success) habits = res.data;
+  } else {
+    habits = HabitStore.loadHabits();
+  }
+
+  let plan = [];
+  if (window.StudyAPI) {
+    const res = await StudyAPI.getStudySessions();
+    if (res && res.success) plan = res.data;
+  } else {
+    plan = HabitStore.loadStudyPlan();
+  }
+
+  let journalEntries = [];
+  if (window.JournalAPI) {
+    const res = await JournalAPI.getJournalEntries();
+    if (res && res.success) journalEntries = res.data;
+  } else {
+    journalEntries = HabitStore.loadJournal();
+  }
+
+  const today = isoDate(0);
   const completedTasks = plan.filter((task) => task.completed).length;
-  const completedHabits = habits.filter((habit) => habit.completedToday).length;
-  const bestStreak = habits.reduce((max, habit) => Math.max(max, habit.longestStreak), 0);
-  const points = rewards.length * 50 + completedTasks * 15 + completedHabits * 10 + bestStreak * 5;
+  const completedHabits = habits.filter((h) => {
+    return h.completedToday || (h.completionLogs && h.completionLogs.some(l => l.date === today && l.completed));
+  }).length;
+
+  const totalCompletions = habits.reduce((sum, h) => {
+    return sum + (h.totalCompletions || (h.completionLogs ? h.completionLogs.filter(l => l.completed).length : 0));
+  }, 0);
+
+  const bestStreak = habits.reduce((max, habit) => Math.max(max, habit.longestStreak || habit.currentStreak || 0), 0);
+  const currentStreak = habits.reduce((max, habit) => Math.max(max, habit.currentStreak || 0), 0);
+
+  const points = rewards.length * 50 + completedTasks * 15 + totalCompletions * 10 + bestStreak * 5;
   const level = Math.max(1, Math.floor(points / 150) + 1);
   const nextLevelPoints = level * 150;
+  const consistencyRate = habits.length ? Math.round(percentage(completedHabits, habits.length)) : 0;
 
   return {
     rewards,
@@ -35,13 +68,14 @@ async function rewardProgress() {
     level,
     nextLevelPoints,
     levelProgress: percentage(points % 150, 150),
+    journalCount: journalEntries.length,
     values: {
-      b1: completedHabits || (rewards.length > 0 ? 1 : 0),
-      b2: bestStreak,
+      b1: (completedHabits > 0 || completedTasks > 0 || rewards.length > 0) ? 1 : 0,
+      b2: currentStreak,
       b3: bestStreak,
-      b4: completedTasks * 3 + completedHabits * 4,
-      b5: completedTasks * 4,
-      b6: 82,
+      b4: totalCompletions,
+      b5: completedTasks,
+      b6: consistencyRate,
     },
   };
 }
@@ -93,8 +127,8 @@ async function renderRewards() {
   if (milestones) {
     milestones.innerHTML = [
       { label: "Complete 7 straight days of habits", done: state.values.b2 >= 7 },
-      { label: "Finish a full week of study tasks", done: state.values.b5 >= 20 },
-      { label: "Write 10 journal reflections", done: HabitStore.loadJournal().length >= 10 },
+      { label: "Finish 20 study tasks", done: state.values.b5 >= 20 },
+      { label: "Write 10 journal reflections", done: state.journalCount >= 10 },
       { label: "Reach 90% monthly consistency", done: state.values.b6 >= 90 },
     ]
       .map(

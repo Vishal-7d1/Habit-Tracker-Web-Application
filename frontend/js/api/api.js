@@ -64,9 +64,14 @@ async function request(endpoint, options = {}) {
 
         console.error("API Error:", error);
 
+        let msg = error.message || "Network Error";
+        if (msg === "Failed to fetch" || error.name === "TypeError") {
+            msg = "Backend server is not running or unreachable (http://127.0.0.1:5000). Please start backend with 'npm run dev' or 'node server.js'.";
+        }
+
         return {
             success: false,
-            message: error.message || "Network Error"
+            message: msg
         };
 
     }

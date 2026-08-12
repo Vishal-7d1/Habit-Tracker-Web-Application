@@ -5,7 +5,11 @@
  * ==========================================================
  */
 
-const API_BASE_URL = window.API_HOST || "http://127.0.0.1:5000/api";
+const API_BASE_URL = window.API_HOST || (
+    (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")
+        ? "http://127.0.0.1:5000/api"
+        : "/api"
+);
 const REQUEST_TIMEOUT = 10000; // 10 seconds
 
 /**
@@ -66,7 +70,7 @@ async function request(endpoint, options = {}) {
 
         let msg = error.message || "Network Error";
         if (msg === "Failed to fetch" || error.name === "TypeError") {
-            msg = "Backend server is not running or unreachable (http://127.0.0.1:5000). Please start backend with 'npm run dev' or 'node server.js'.";
+            msg = "Backend server is not running or unreachable. Please verify server status.";
         }
 
         return {

@@ -1,0 +1,14 @@
+{
+  "name": "habit-tracker-web-application",
+  "version": "1.0.0",
+  "description": "Habit Tracker & Study Planner Web Application",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "build": "cd backend && npm install",
+    "postinstall": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

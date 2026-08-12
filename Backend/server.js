@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+const path = require("path");
 
 const config = require("./config/env");
 const connectDB = require("./config/db");
@@ -60,7 +61,34 @@ app.use("/api/profile", require("./routes/profileRoutes"));
 app.use("/api/dashboard", require("./routes/dashboardRoutes"));
 app.use("/api/reminders", require("./routes/reminderRoutes"));
 
-// ---------- 404 Handler ----------
+// ---------- Serve Frontend Static Files ----------
+const frontendPath = path.join(__dirname, "../frontend");
+app.use(express.static(frontendPath));
+
+// For non-API routes, serve static pages or fallback to index.html
+app.get("*", (req, res, next) => {
+  if (req.originalUrl.startsWith("/api")) {
+    return next();
+  }
+
+  let reqPath = req.path;
+  if (reqPath === "/") {
+    return res.sendFile(path.join(frontendPath, "index.html"));
+  }
+
+  if (!path.extname(reqPath)) {
+    reqPath += ".html";
+  }
+
+  const targetFile = path.join(frontendPath, reqPath);
+  res.sendFile(targetFile, (err) => {
+    if (err) {
+      res.sendFile(path.join(frontendPath, "index.html"));
+    }
+  });
+});
+
+// ---------- 404 Handler for Unmatched API Routes ----------
 app.use((req, res) => {
   res.status(404).json({
     success: false,

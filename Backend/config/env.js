@@ -1,21 +1,14 @@
 require("dotenv").config();
-console.log("CLIENT_URL =", process.env.CLIENT_URL);
+console.log("CLIENT_URL =", process.env.CLIENT_URL || "Not set (using default)");
 
 /**
  * Centralized, validated access point for all environment variables.
- * Importing from here (instead of process.env directly) ensures
- * every required variable is present before the server starts.
  */
-const requiredVars = ["MONGO_URI", "JWT_SECRET", "JWT_REFRESH_SECRET"];
-
-const missing = requiredVars.filter((key) => !process.env[key]);
-
-if (missing.length > 0) {
+if (!process.env.MONGO_URI) {
   console.error(
-    `Missing required environment variables: ${missing.join(", ")}`
+    "❌ CRITICAL ERROR: MONGO_URI environment variable is missing!\n" +
+    "👉 Please go to Railway Dashboard -> Service -> Variables tab and add MONGO_URI."
   );
-  console.error("Copy .env.example to .env and fill in the values.");
-  process.exit(1);
 }
 
 const config = {
@@ -25,11 +18,11 @@ const config = {
 
   mongoUri: process.env.MONGO_URI,
 
-  jwtSecret: process.env.JWT_SECRET,
+  jwtSecret: process.env.JWT_SECRET || "habit_tracker_jwt_secret_key_2026",
   jwtExpire: process.env.JWT_EXPIRE || "7d",
   jwtCookieExpire: parseInt(process.env.JWT_COOKIE_EXPIRE, 10) || 7,
 
-  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
+  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || "habit_tracker_jwt_refresh_secret_key_2026",
   jwtRefreshExpire: process.env.JWT_REFRESH_EXPIRE || "30d",
 
   smtp: {

@@ -7,6 +7,12 @@ const mongoose = require("mongoose");
  */
 const connectDB = async () => {
   try {
+    if (!process.env.MONGO_URI) {
+      console.error("❌ Cannot connect to MongoDB: MONGO_URI environment variable is missing.");
+      console.error("👉 Please add MONGO_URI in Railway Dashboard -> Service -> Variables.");
+      process.exit(1);
+    }
+
     const conn = await mongoose.connect(process.env.MONGO_URI);
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);

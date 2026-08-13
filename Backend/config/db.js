@@ -1,4 +1,12 @@
 const mongoose = require("mongoose");
+const dns = require("dns");
+
+// Set Google Public DNS as fallback for SRV lookup issues on Windows local networks
+try {
+  dns.setServers(["8.8.8.8", "8.8.4.4"]);
+} catch (e) {
+  // Fallback to default system DNS if custom servers cannot be set
+}
 
 /**
  * Establishes connection to MongoDB using Mongoose.
